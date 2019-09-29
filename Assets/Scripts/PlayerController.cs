@@ -17,6 +17,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private Rigidbody2D rBody;
     private SpriteRenderer sprite;
+    private Animator animator;
 
     public FacingEnum GetFacing()
     {
@@ -36,6 +37,7 @@ public class PlayerController : Singleton<PlayerController>
 
         rBody = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -59,30 +61,36 @@ public class PlayerController : Singleton<PlayerController>
         if (Input.GetKeyDown(KeyCode.L))
             GoToNextPigment();
 
-        float hSpeed = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
-
-        if (hSpeed > 0)
-        {
-            isFacingLeft = false;
-            sprite.flipX = false;
-        }
-        else if (hSpeed < 0)
-        {
-            isFacingLeft = true;
-            sprite.flipX = true;
-        }
-        else
-        {
-            // Any logic needed for neutral
-        }
-        transform.Translate(new Vector3(hSpeed, 0));
-
         if (Input.GetButtonDown("Jump") && canJump)
         {
             canJump = false;
             rBody.velocity = Vector2.zero;
             rBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            animator.SetBool("isJumping", true);
         }
+    }
+
+    void FixedUpdate()
+    {
+        float hSpeed = Input.GetAxisRaw("Horizontal") * runSpeed * Time.fixedDeltaTime;
+
+        if (hSpeed > 0)
+        {
+            isFacingLeft = false;
+            sprite.flipX = false;
+            animator.SetBool("isMoving", true);
+        }
+        else if (hSpeed < 0)
+        {
+            isFacingLeft = true;
+            sprite.flipX = true;
+            animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
+        transform.Translate(new Vector3(hSpeed, 0));
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -98,17 +106,10 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.gameObject.tag.Equals("Pigment"))
-        {
-
-        }
-    }
-
     public void ResetJump()
     {
+        Debug.Log("RESET");
+        animator.SetBool("isJumping", false);
         canJump = true;
     }
 
