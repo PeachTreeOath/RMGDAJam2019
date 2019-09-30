@@ -11,6 +11,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private bool isFacingLeft;
     private bool canJump;
+    private bool isHoldingPigment;
     private List<Pigment> colorsObtained = new List<Pigment>();
     private int pigmentIndex;
     private bool followCamOn; // For prototyping only
@@ -108,9 +109,22 @@ public class PlayerController : Singleton<PlayerController>
 
     public void ResetJump()
     {
-        Debug.Log("RESET");
         animator.SetBool("isJumping", false);
         canJump = true;
+    }
+
+    public void TakeDamage()
+    {
+        Debug.Log("PLAYER HIT");
+        if (isHoldingPigment)
+        {
+            // Lose pigment mechanic, not impl'd yet
+            isHoldingPigment = false;
+        }
+        else
+        {
+            // Die and restart
+        }
     }
 
     // For prototyping only
