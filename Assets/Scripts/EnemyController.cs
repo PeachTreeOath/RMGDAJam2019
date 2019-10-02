@@ -5,21 +5,24 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public enum FacingEnum { LEFT, RIGHT };
+    public enum EnemyState { STANDING, WALKING, CHARGING }
 
     public float runSpeed;
+    public float chargeSpeed;
     public float pauseTime;
     public float sightRadius;
     public List<float> xWaypoints = new List<float>();
+    public GameObject enemyVision; // Inspector assigned reference to child
 
     private bool isFacingLeft;
     private int currWaypointIdx = -1;
     private float pauseStartTime;
-    private bool isPaused;
 
     private Rigidbody2D rBody;
     private SpriteRenderer sprite;
     private Animator animator;
 
+    private EnemyState state = EnemyState.STANDING;
     public FacingEnum GetFacing()
     {
         if (isFacingLeft)
@@ -47,48 +50,76 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float hSpeed = runSpeed * Time.deltaTime;
-        Vector3 dest = new Vector2(xWaypoints[currWaypointIdx], transform.position.y);
-        transform.position = Vector3.MoveTowards(transform.position, dest, hSpeed);
-        float distanceToDest = transform.position.x - dest.x;
+        float distanceToDest = 0;
+        float hSpeed = 0;
+        Vector3 dest = Vector3.zero;
+        switch (state)
+        {
+            case EnemyState.STANDING:
+                // We're paused, just return unless we're past counter
+                if (pauseStartTime + pauseTime >= Time.time)
+                {
+                    // Not past pause timer yet
+                    return;
+                }
+                else
+                {
+                    ChooseNextWaypoint();
+                }
+                break;
+            case EnemyState.WALKING:
+                hSpeed = runSpeed * Time.deltaTime;
+                dest = new Vector2(xWaypoints[currWaypointIdx], transform.position.y);
+                transform.position = Vector3.MoveTowards(transform.position, dest, hSpeed);
+                distanceToDest = transform.position.x - dest.x;
 
-        if (!isPaused)
-        {
-            // Check if we need to pause at waypoint
-            if (Mathf.Abs(distanceToDest) < 0.001f)
-            {
-                isPaused = true;
-                pauseStartTime = Time.time;
-                animator.SetBool("isMoving", false);
-                return;
-            }
-        }
-        else
-        {
-            // We're paused, just return unless we're past counter
-            if (pauseStartTime + pauseTime < Time.time)
-            {
-                isPaused = false;
-                ChooseNextWaypoint();
-            }
-            else
-            {
-                // Not past pause timer yet
-                return;
-            }
-        }
+                if (distanceToDest > 0)
+                {
+                    isFacingLeft = true;
+                    sprite.flipX = true;
+                    enemyVision.transform.localScale = new Vector3(-1, enemyVision.transform.localScale.y, enemyVision.transform.localScale.z);
+                    animator.SetBool("isMoving", true);
+                }
+                else if (distanceToDest < 0)
+                {
+                    isFacingLeft = false;
+                    sprite.flipX = false;
+                    enemyVision.transform.localScale = new Vector3(1, enemyVision.transform.localScale.y, enemyVision.transform.localScale.z);
+                    animator.SetBool("isMoving", true);
+                }
 
-        if (distanceToDest > 0)
-        {
-            isFacingLeft = true;
-            sprite.flipX = true;
-            animator.SetBool("isMoving", true);
-        }
-        else if (distanceToDest < 0)
-        {
-            isFacingLeft = false;
-            sprite.flipX = false;
-            animator.SetBool("isMoving", true);
+                // Check if we need to pause at waypoint
+                if (Mathf.Abs(distanceToDest) < 0.001f)
+                {
+                    pauseStartTime = Time.time;
+                    animator.SetBool("isMoving", false);
+                    state = EnemyState.STANDING;
+                    return;
+                }
+                break;
+            case EnemyState.CHARGING:
+                hSpeed = chargeSpeed * Time.deltaTime;
+                dest = PlayerController.instance.transform.position;
+                transform.position = Vector3.MoveTowards(transform.position, dest, hSpeed);
+                distanceToDest = transform.position.x - dest.x;
+
+                //TODO: Set Sprites to charging
+                if (distanceToDest > 0)
+                {
+                    isFacingLeft = true;
+                    sprite.flipX = true;
+                    enemyVision.transform.localScale = new Vector3(-1, enemyVision.transform.localScale.y, enemyVision.transform.localScale.z);
+                    animator.SetBool("isMoving", true);
+                }
+                else if (distanceToDest < 0)
+                {
+                    isFacingLeft = false;
+                    sprite.flipX = false;
+                    enemyVision.transform.localScale = new Vector3(1, enemyVision.transform.localScale.y, enemyVision.transform.localScale.z);
+                    animator.SetBool("isMoving", true);
+                }
+
+                break;
         }
     }
 
@@ -98,6 +129,12 @@ public class EnemyController : MonoBehaviour
         {
             PlayerController.instance.TakeDamage();
         }
+    }
+
+    public void DetectedPlayer()
+    {
+        if (PlayerController.instance.GetCurrentPigment() != PigmentColor.NONE)
+            state = EnemyState.CHARGING;
     }
 
     private void ChooseNextWaypoint()
@@ -114,5 +151,6 @@ public class EnemyController : MonoBehaviour
             nextWayPointIdx = UnityEngine.Random.Range(0, xWaypoints.Count);
         }
         currWaypointIdx = nextWayPointIdx;
+        state = EnemyState.WALKING;
     }
 }

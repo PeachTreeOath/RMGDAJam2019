@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum PigmentColor
 {
+    NONE,
     BLUE,
     YELLOW,
     RED,
@@ -15,7 +16,6 @@ public enum PigmentColor
 
 public class Pigment : MonoBehaviour
 {
-
     public PigmentColor pigmentColor;
     public Color visualColor;
 

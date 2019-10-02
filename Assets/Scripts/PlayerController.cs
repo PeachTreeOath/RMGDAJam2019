@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : Singleton<PlayerController>
 {
@@ -8,12 +9,12 @@ public class PlayerController : Singleton<PlayerController>
 
     public float runSpeed;
     public float jumpForce;
+    public int pigmentIndex;
 
     private bool isFacingLeft;
     private bool canJump;
     private bool isHoldingPigment;
     private List<Pigment> colorsObtained = new List<Pigment>();
-    private int pigmentIndex;
     private bool followCamOn; // For prototyping only
 
     private Rigidbody2D rBody;
@@ -44,6 +45,7 @@ public class PlayerController : Singleton<PlayerController>
     private void Start()
     {
         ToggleCam(); // Set cam to follow
+        GainPigment(GameObject.Find("ClearPigment").GetComponent<Pigment>());
     }
 
     // Update is called once per frame
@@ -52,6 +54,10 @@ public class PlayerController : Singleton<PlayerController>
         // For prototyping only
         if (Input.GetKeyDown(KeyCode.T))
             ToggleCam();
+
+        // For prototyping only
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene("Game");
 
         if (Input.GetKeyDown(KeyCode.J))
             GoToPreviousPigment();
@@ -96,15 +102,20 @@ public class PlayerController : Singleton<PlayerController>
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag.Equals("Ground"))
+        string tag = col.gameObject.tag;
+        if (tag.Equals("Ground"))
         {
             ResetJump();
         }
-
-        if (col.gameObject.tag.Equals("Pigment"))
+        else if (tag.Equals("Pigment"))
         {
             GainPigment(col.GetComponent<Pigment>().PickupColor());
         }
+    }
+
+    public PigmentColor GetCurrentPigment()
+    {
+        return colorsObtained[pigmentIndex].pigmentColor;
     }
 
     public void ResetJump()
@@ -144,14 +155,12 @@ public class PlayerController : Singleton<PlayerController>
     private void GainPigment(Pigment pigmentColor)
     {
         colorsObtained.Add(pigmentColor);
-        if (colorsObtained.Count == 1)
-        {
-            pigmentIndex = 0;
-            PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
-        }
+        CycleMenu.instance.AddToMenu(pigmentColor);
+        pigmentIndex = colorsObtained.Count;
+
         if (colorsObtained.Count == 2)
         {
-            PigmentViewer.instance.ShowArrows();
+            //PigmentViewer.instance.ShowArrows();
         }
     }
 
@@ -164,7 +173,8 @@ public class PlayerController : Singleton<PlayerController>
 
         if (colorsObtained.Count != 0)
         {
-            PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
+            CycleMenu.instance.SpinCW();
+            //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }
 
@@ -180,7 +190,8 @@ public class PlayerController : Singleton<PlayerController>
         }
         else
         {
-            PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
+            CycleMenu.instance.SpinCCW();
+            //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }
 
