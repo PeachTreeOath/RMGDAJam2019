@@ -171,9 +171,9 @@ public class PlayerController : Singleton<PlayerController>
         if (pigmentIndex >= colorsObtained.Count)
             pigmentIndex = 0;
 
-        if (colorsObtained.Count != 0)
+        if (colorsObtained.Count > 1)
         {
-            CycleMenu.instance.SpinCW();
+            CycleMenu.instance.SpinCW(pigmentIndex);
             //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }
@@ -190,7 +190,8 @@ public class PlayerController : Singleton<PlayerController>
         }
         else
         {
-            CycleMenu.instance.SpinCCW();
+            if (colorsObtained.Count > 1)
+                CycleMenu.instance.SpinCCW(pigmentIndex);
             //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }

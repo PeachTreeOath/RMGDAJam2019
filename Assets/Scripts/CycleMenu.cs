@@ -61,7 +61,7 @@ public class CycleMenu : Singleton<CycleMenu>
         }
     }
 
-    public void SpinCCW()
+    public void SpinCCW(int pigmentIndex)
     {
         spinStartTime = Time.time;
         prevAngle = destAngle;
@@ -70,18 +70,18 @@ public class CycleMenu : Singleton<CycleMenu>
         destAngle = currNorthAngle - angleToSpin;
     }
 
-    public void SpinCW()
+    public void SpinCW(int pigmentIndex)
     {
         spinStartTime = Time.time;
         prevAngle = destAngle;
         currNorthAngle = destAngle;
         float angleToSpin = 360 / menuItems.Count;
         destAngle = currNorthAngle + angleToSpin;
-    }
 
-    private void InitMenu()
-    {
+        for (int i = 0; i < menuItems.Count; i++)
+        {
 
+        }
     }
 
     public void AddToMenu(Pigment pigment)
