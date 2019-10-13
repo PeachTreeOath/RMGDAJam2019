@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,17 +8,27 @@ public class PlayerController : Singleton<PlayerController>
 {
     public enum FacingEnum { LEFT, RIGHT };
 
+    public RuntimeAnimatorController grayAnim;
+    public RuntimeAnimatorController redAnim;
+    public RuntimeAnimatorController blueAnim;
+    public RuntimeAnimatorController yellowAnim;
+
     public float runSpeed;
     public float jumpForce;
     public int pigmentIndex;
+    public float hitForce;
 
     private bool isFacingLeft;
     private bool canJump;
     private bool isHoldingPigment;
     private List<Pigment> colorsObtained = new List<Pigment>();
     private bool followCamOn; // For prototyping only
+    private bool invincible;
+    private bool inHitStun;
+    private Material origMat;
+    private Material flashMat;
 
-    private Rigidbody2D rBody;
+    private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
 
@@ -37,20 +48,25 @@ public class PlayerController : Singleton<PlayerController>
     {
         base.Awake();
 
-        rBody = GetComponent<Rigidbody2D>();
+        body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        origMat = sprite.material;
+        flashMat = Resources.Load<Material>("Materials/WhiteFlashMat");
     }
 
     private void Start()
     {
         ToggleCam(); // Set cam to follow
         GainPigment(GameObject.Find("ClearPigment").GetComponent<Pigment>());
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         // For prototyping only
         if (Input.GetKeyDown(KeyCode.T))
             ToggleCam();
@@ -71,14 +87,20 @@ public class PlayerController : Singleton<PlayerController>
         if (Input.GetButtonDown("Jump") && canJump)
         {
             canJump = false;
-            rBody.velocity = Vector2.zero;
-            rBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            body.velocity = Vector2.zero;
+            body.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetBool("isJumping", true);
         }
     }
 
     void FixedUpdate()
     {
+        // Player in hitstun
+        if (inHitStun)
+        {
+            return;
+        }
+
         float hSpeed = Input.GetAxisRaw("Horizontal") * runSpeed * Time.fixedDeltaTime;
 
         if (hSpeed > 0)
@@ -107,6 +129,12 @@ public class PlayerController : Singleton<PlayerController>
         {
             ResetJump();
         }
+        else if (tag.Equals("Tile"))
+        {
+            ColorTile tile = col.GetComponent<ColorTile>();
+            tile.SwitchToColor();
+            GameManager.instance.CompleteTile(tile);
+        }
         else if (tag.Equals("Pigment"))
         {
             GainPigment(col.GetComponent<Pigment>().PickupColor());
@@ -126,16 +154,58 @@ public class PlayerController : Singleton<PlayerController>
 
     public void TakeDamage()
     {
-        Debug.Log("PLAYER HIT");
-        if (isHoldingPigment)
+        if (invincible)
         {
-            // Lose pigment mechanic, not impl'd yet
-            isHoldingPigment = false;
+            return;
+        }
+
+        // AudioManager.Instance.PlaySound("Damage", 0.5f);
+        StartCoroutine(FlashWhite(.05f, 1f));
+        Vector2 hitDir = Vector2.zero;
+        if (isFacingLeft)
+        {
+            hitDir = new Vector2(hitForce, hitForce);
         }
         else
         {
-            // Die and restart
+            hitDir = new Vector2(-hitForce, hitForce);
         }
+        body.velocity = Vector2.zero;
+        body.AddForce(hitDir, ForceMode2D.Impulse);
+        canJump = false; //TODO doublecheck this
+        invincible = true;
+        inHitStun = true;
+
+        GameManager.instance.HitTaken();
+
+        animator.SetBool("isJumping", true);
+    }
+
+    private IEnumerator FlashWhite(float flashSpeed, float duration)
+    {
+        float elapsedTime = 0;
+        bool toggleFlash = false;
+        while (elapsedTime < duration)
+        {
+            toggleFlash = !toggleFlash;
+            if (toggleFlash)
+            {
+                sprite.material = flashMat;
+            }
+            else
+            {
+                sprite.material = origMat;
+            }
+            yield return new WaitForSeconds(flashSpeed);
+            elapsedTime += flashSpeed;
+            if (inHitStun && elapsedTime > duration / 2)
+            {
+                inHitStun = false;
+            }
+        }
+        animator.SetBool("isJumping", false);
+        sprite.material = origMat;
+        invincible = false;
     }
 
     // For prototyping only
@@ -156,7 +226,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         colorsObtained.Add(pigmentColor);
         CycleMenu.instance.AddToMenu(pigmentColor);
-        pigmentIndex = colorsObtained.Count;
+        pigmentIndex = colorsObtained.Count - 1;
 
         if (colorsObtained.Count == 2)
         {

@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Pigment
   - EnemyVision
+  - Tile
   layers:
   - Default
   - TransparentFX

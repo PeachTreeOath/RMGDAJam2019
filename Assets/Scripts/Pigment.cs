@@ -19,7 +19,7 @@ public class Pigment : MonoBehaviour
     public PigmentColor pigmentColor;
     public Color visualColor;
 
-    private void Start()
+    private void Awake()
     {
         visualColor = GetComponent<SpriteRenderer>().color;
     }

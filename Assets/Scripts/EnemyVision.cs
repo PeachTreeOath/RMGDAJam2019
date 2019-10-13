@@ -11,8 +11,15 @@ public class EnemyVision : MonoBehaviour
     {
         if (col.gameObject.tag.Equals("Player"))
         {
-            Debug.Log("DETECTED");
-            enemy.DetectedPlayer();
+            enemy.DetectedPlayer(true);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.tag.Equals("Player"))
+        {
+            enemy.DetectedPlayer(false);
         }
     }
 }

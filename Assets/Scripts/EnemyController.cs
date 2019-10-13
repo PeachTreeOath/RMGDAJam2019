@@ -123,7 +123,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerStay2D(Collider2D col)
     {
         if (col.gameObject.tag.Equals("Player"))
         {
@@ -131,10 +131,16 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void DetectedPlayer()
+    public void DetectedPlayer(bool detect)
     {
-        if (PlayerController.instance.GetCurrentPigment() != PigmentColor.NONE)
+        if (detect && PlayerController.instance.GetCurrentPigment() != PigmentColor.NONE)
             state = EnemyState.CHARGING;
+
+        if (!detect)
+        {
+            pauseStartTime = Time.time;
+            state = EnemyState.STANDING;
+        }
     }
 
     private void ChooseNextWaypoint()
