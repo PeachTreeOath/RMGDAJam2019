@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: dd077b34f7b9d0946b8d0f1fdb404649
+guid: 30126155e64caea4085ff6af02caf486
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3035810306065516939
-    second: WalkBlue_0
+      213: -2707019751588231847
+    second: YellowBlink_0
   - first:
-      213: -7011117713640213507
-    second: WalkBlue_1
+      213: -5837807297557466858
+    second: YellowBlink_1
   - first:
-      213: -7269891024116610824
-    second: WalkBlue_2
-  - first:
-      213: -382478068475743800
-    second: WalkBlue_3
+      213: 6182571539730786289
+    second: YellowBlink_2
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,7 +107,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WalkBlue_0
+      name: YellowBlink_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +121,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12d053ffb817ed444a3cdd078c38549b
-      internalID: 3035810306065516939
+      spriteID: a2d8a672208630040926330269fb6648
+      internalID: -2707019751588231847
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkBlue_1
+      name: YellowBlink_1
       rect:
         serializedVersion: 2
         x: 64
@@ -145,14 +142,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 076e720fd65fcec4bb4aa582b62855ee
-      internalID: -7011117713640213507
+      spriteID: 3c9d86feb24828a42a62f5a0c825b6c6
+      internalID: -5837807297557466858
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkBlue_2
+      name: YellowBlink_2
       rect:
         serializedVersion: 2
         x: 128
@@ -166,29 +163,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cadfe13f3b6be8d41903bfea5d3af265
-      internalID: -7269891024116610824
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: WalkBlue_3
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 70b3f7fca0555884f80e16158cd7c7ba
-      internalID: -382478068475743800
+      spriteID: 09cb79d4d091eb74581c2fc9ed8f9632
+      internalID: 6182571539730786289
       vertices: []
       indices: 
       edges: []

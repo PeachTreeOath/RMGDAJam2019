@@ -20,11 +20,9 @@ public class TileBuilder : MonoBehaviour
         CreateDirtTiles();
 
         GameManager.instance.SetTileCount((int)(rowNum * colNum));
+        GameManager.instance.UpdateScore();
     }
 
-    /// <summary>
-    /// Generates the tiles
-    /// </summary>
     private void CreateDirtTiles()
     {
         // Adjust the number of rows/columns based on the scale of the dirt tile.

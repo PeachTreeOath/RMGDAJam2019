@@ -35,6 +35,7 @@ public class GameManager : Singleton<GameManager>
         lastTiles.Push(tile);
         tile.SwitchToColor();
         currCompletedTiles++;
+        UpdateScore();
         CheckVictory();
     }
 
@@ -42,6 +43,8 @@ public class GameManager : Singleton<GameManager>
     {
         tile.SwitchToBnW();
         currCompletedTiles--;
+
+        UpdateScore();
     }
 
     public void SetTileCount(int numTiles)
@@ -49,8 +52,17 @@ public class GameManager : Singleton<GameManager>
         completeGameTileCount = (int)(percentToCompletion * numTiles);
     }
 
+    public void UpdateScore()
+    {
+        float ratio = (float)currCompletedTiles / completeGameTileCount;
+        completeFill.fillAmount = ratio;
+        int ratioText = (int)(ratio * 100);
+        completeText.text = ratioText + "%";
+    }
+
     private void CheckVictory()
     {
+        //todo show only 100% in the victory bar, maybe a mark at 75%?
         if (currCompletedTiles >= completeGameTileCount)
         {
             Debug.Log("BEAT GAME");

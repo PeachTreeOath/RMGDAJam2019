@@ -132,7 +132,6 @@ public class PlayerController : Singleton<PlayerController>
         else if (tag.Equals("Tile"))
         {
             ColorTile tile = col.GetComponent<ColorTile>();
-            tile.SwitchToColor();
             GameManager.instance.CompleteTile(tile);
         }
         else if (tag.Equals("Pigment"))
@@ -271,6 +270,22 @@ public class PlayerController : Singleton<PlayerController>
         if (colorsObtained.Count != 0)
         {
             ToggleManager.instance.TogglePigment(colorsObtained[pigmentIndex]);
+
+            switch (colorsObtained[pigmentIndex].pigmentColor)
+            {
+                case PigmentColor.NONE:
+                    animator.runtimeAnimatorController = grayAnim;
+                    break;
+                case PigmentColor.BLUE:
+                    animator.runtimeAnimatorController = blueAnim;
+                    break;
+                case PigmentColor.RED:
+                    animator.runtimeAnimatorController = redAnim;
+                    break;
+                case PigmentColor.YELLOW:
+                    animator.runtimeAnimatorController = yellowAnim;
+                    break;
+            }
         }
     }
 }

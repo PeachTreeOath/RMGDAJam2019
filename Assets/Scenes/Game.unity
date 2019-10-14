@@ -2624,7 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3726668ea69bfeb4d9884e5c29cadd1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pigmentColor: 2
+  pigmentColor: 3
   visualColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &555620361
 SpriteRenderer:
@@ -3540,7 +3540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3726668ea69bfeb4d9884e5c29cadd1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pigmentColor: 0
+  pigmentColor: 1
   visualColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!58 &719566577
 CircleCollider2D:
@@ -7581,8 +7581,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979b796841dad584d820f33692c20747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completeFill: {fileID: 0}
-  completeText: {fileID: 0}
+  completeFill: {fileID: 614905339}
+  completeText: {fileID: 748288909}
 --- !u!114 &1119826627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7756,7 +7756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3726668ea69bfeb4d9884e5c29cadd1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pigmentColor: 1
+  pigmentColor: 2
   visualColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &1200126435
 SpriteRenderer:
@@ -8906,7 +8906,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 639, y: 298}
+  m_AnchoredPosition: {x: 515.5, y: 298}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2095985332
@@ -9025,7 +9025,22 @@ PrefabInstance:
         type: 3}
       propertyPath: grayAnim
       value: 
-      objectReference: {fileID: 9100000, guid: eb4bb67d2b2590c4cab93aed30aef5cd, type: 2}
+      objectReference: {fileID: 9100000, guid: 13fc23f027f99a44ab73d496d71f56dd, type: 2}
+    - target: {fileID: 4640707794440371209, guid: 7a25c6ecbbf06314f9506349bb8dfa3f,
+        type: 3}
+      propertyPath: blueAnim
+      value: 
+      objectReference: {fileID: 9100000, guid: cb195318eb283fa4da8bf3ca9b4c4b1a, type: 2}
+    - target: {fileID: 4640707794440371209, guid: 7a25c6ecbbf06314f9506349bb8dfa3f,
+        type: 3}
+      propertyPath: yellowAnim
+      value: 
+      objectReference: {fileID: 9100000, guid: d6e616b3b346db249bc6d62c7636066f, type: 2}
+    - target: {fileID: 4640707794440371209, guid: 7a25c6ecbbf06314f9506349bb8dfa3f,
+        type: 3}
+      propertyPath: redAnim
+      value: 
+      objectReference: {fileID: 9100000, guid: 04b7ed57cb4169c478448f3508c1fc6a, type: 2}
     - target: {fileID: 4640707794440371210, guid: 7a25c6ecbbf06314f9506349bb8dfa3f,
         type: 3}
       propertyPath: m_Controller
