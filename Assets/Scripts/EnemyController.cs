@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     public float sightRadius;
     public List<float> xWaypoints = new List<float>();
     public GameObject enemyVision; // Inspector assigned reference to child
+    public SpriteRenderer bangSprite;
 
     private bool isFacingLeft;
     private int currWaypointIdx = -1;
@@ -64,6 +65,7 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
+                    bangSprite.enabled = false;
                     ChooseNextWaypoint();
                 }
                 break;
@@ -94,6 +96,7 @@ public class EnemyController : MonoBehaviour
                     pauseStartTime = Time.time;
                     animator.SetBool("isMoving", false);
                     state = EnemyState.STANDING;
+                    bangSprite.enabled = false;
                     return;
                 }
                 break;
@@ -134,12 +137,16 @@ public class EnemyController : MonoBehaviour
     public void DetectedPlayer(bool detect)
     {
         if (detect && PlayerController.instance.GetCurrentPigment() != PigmentColor.NONE)
+        {
             state = EnemyState.CHARGING;
+            bangSprite.enabled = true;
+        }
 
         if (!detect)
         {
             pauseStartTime = Time.time;
             state = EnemyState.STANDING;
+            bangSprite.enabled = false;
         }
     }
 

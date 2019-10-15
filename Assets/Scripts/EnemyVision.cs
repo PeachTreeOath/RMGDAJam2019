@@ -7,7 +7,7 @@ public class EnemyVision : MonoBehaviour
 
     public EnemyController enemy; // Inspector assigned reference to parent
 
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerStay2D(Collider2D col)
     {
         if (col.gameObject.tag.Equals("Player"))
         {
@@ -21,5 +21,10 @@ public class EnemyVision : MonoBehaviour
         {
             enemy.DetectedPlayer(false);
         }
+    }
+
+    public void PlayerStealthed()
+    {
+        enemy.DetectedPlayer(false);
     }
 }

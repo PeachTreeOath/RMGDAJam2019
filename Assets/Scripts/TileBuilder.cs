@@ -9,6 +9,7 @@ using UnityEngine;
 public class TileBuilder : MonoBehaviour
 {
 
+    public Vector2 center;
     public float rowNum;
     public float colNum;
     public float scale = 0.02f;
@@ -36,6 +37,8 @@ public class TileBuilder : MonoBehaviour
 
         float startX = (size.x * colNum * -.5f) + size.x / 2;
         float startY = (size.y * rowNum * .5f) - size.y / 2;
+        startX += center.x;
+        startY += center.y;
         float currX = startX;
         float currY = startY;
 

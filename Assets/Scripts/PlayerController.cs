@@ -16,6 +16,7 @@ public class PlayerController : Singleton<PlayerController>
     public float runSpeed;
     public float jumpForce;
     public int pigmentIndex;
+    public int equippedPigmentIndex;
     public float hitForce;
 
     private bool isFacingLeft;
@@ -27,6 +28,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool inHitStun;
     private Material origMat;
     private Material flashMat;
+    private EnemyVision[] allVisions;
 
     private Rigidbody2D body;
     private SpriteRenderer sprite;
@@ -54,6 +56,8 @@ public class PlayerController : Singleton<PlayerController>
 
         origMat = sprite.material;
         flashMat = Resources.Load<Material>("Materials/WhiteFlashMat");
+
+        allVisions = GameObject.FindObjectsOfType<EnemyVision>();
     }
 
     private void Start()
@@ -142,7 +146,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public PigmentColor GetCurrentPigment()
     {
-        return colorsObtained[pigmentIndex].pigmentColor;
+        return colorsObtained[equippedPigmentIndex].pigmentColor;
     }
 
     public void ResetJump()
@@ -159,7 +163,7 @@ public class PlayerController : Singleton<PlayerController>
         }
 
         // AudioManager.Instance.PlaySound("Damage", 0.5f);
-        StartCoroutine(FlashWhite(.05f, 1f));
+        StartCoroutine(FlashWhite(.05f, 2f));
         Vector2 hitDir = Vector2.zero;
         if (isFacingLeft)
         {
@@ -197,7 +201,7 @@ public class PlayerController : Singleton<PlayerController>
             }
             yield return new WaitForSeconds(flashSpeed);
             elapsedTime += flashSpeed;
-            if (inHitStun && elapsedTime > duration / 2)
+            if (inHitStun && elapsedTime > duration / 4)
             {
                 inHitStun = false;
             }
@@ -223,9 +227,17 @@ public class PlayerController : Singleton<PlayerController>
 
     private void GainPigment(Pigment pigmentColor)
     {
+        if (colorsObtained.Contains(pigmentColor))
+            return;
+
         colorsObtained.Add(pigmentColor);
         CycleMenu.instance.AddToMenu(pigmentColor);
         pigmentIndex = colorsObtained.Count - 1;
+
+        if (colorsObtained.Count == 1)
+        {
+            Invoke("UsePigment", 0.1f);
+        }
 
         if (colorsObtained.Count == 2)
         {
@@ -234,7 +246,7 @@ public class PlayerController : Singleton<PlayerController>
     }
 
 
-    private void GoToNextPigment()
+    private void GoToPreviousPigment()
     {
         pigmentIndex++;
         if (pigmentIndex >= colorsObtained.Count)
@@ -242,12 +254,12 @@ public class PlayerController : Singleton<PlayerController>
 
         if (colorsObtained.Count > 1)
         {
-            CycleMenu.instance.SpinCW(pigmentIndex);
+            CycleMenu.instance.SpinCCW(pigmentIndex);
             //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }
 
-    private void GoToPreviousPigment()
+    private void GoToNextPigment()
     {
         pigmentIndex--;
         if (pigmentIndex < 0)
@@ -260,7 +272,7 @@ public class PlayerController : Singleton<PlayerController>
         else
         {
             if (colorsObtained.Count > 1)
-                CycleMenu.instance.SpinCCW(pigmentIndex);
+                CycleMenu.instance.SpinCW(pigmentIndex);
             //PigmentViewer.instance.ChangeColor(colorsObtained[pigmentIndex]);
         }
     }
@@ -269,12 +281,17 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (colorsObtained.Count != 0)
         {
-            ToggleManager.instance.TogglePigment(colorsObtained[pigmentIndex]);
+            equippedPigmentIndex = pigmentIndex;
+            ToggleManager.instance.TogglePigment(colorsObtained[equippedPigmentIndex]);
 
-            switch (colorsObtained[pigmentIndex].pigmentColor)
+            switch (colorsObtained[equippedPigmentIndex].pigmentColor)
             {
                 case PigmentColor.NONE:
                     animator.runtimeAnimatorController = grayAnim;
+                    foreach (EnemyVision vision in allVisions)
+                    {
+                        vision.PlayerStealthed();
+                    }
                     break;
                 case PigmentColor.BLUE:
                     animator.runtimeAnimatorController = blueAnim;

@@ -77,11 +77,6 @@ public class CycleMenu : Singleton<CycleMenu>
         currNorthAngle = destAngle;
         float angleToSpin = 360 / menuItems.Count;
         destAngle = currNorthAngle + angleToSpin;
-
-        for (int i = 0; i < menuItems.Count; i++)
-        {
-
-        }
     }
 
     public void AddToMenu(Pigment pigment)
