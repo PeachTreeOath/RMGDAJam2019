@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
@@ -11,8 +12,9 @@ public class GameManager : Singleton<GameManager>
     public TextMeshProUGUI completeText;
 
     private int completeGameTileCount;
+    private int totalTiles;
     private int currCompletedTiles;
-    private float percentToCompletion = .75f;
+    private float percentToCompletion = .66f;
     private int damageCount = 75;
     private Stack<ColorTile> lastTiles = new Stack<ColorTile>();
 
@@ -49,12 +51,13 @@ public class GameManager : Singleton<GameManager>
 
     public void SetTileCount(int numTiles)
     {
+        totalTiles = numTiles;
         completeGameTileCount = (int)(percentToCompletion * numTiles);
     }
 
     public void UpdateScore()
     {
-        float ratio = (float)currCompletedTiles / completeGameTileCount;
+        float ratio = (float)currCompletedTiles / totalTiles;
         completeFill.fillAmount = ratio;
         int ratioText = (int)(ratio * 100);
         completeText.text = ratioText + "%";
@@ -65,7 +68,7 @@ public class GameManager : Singleton<GameManager>
         //todo show only 100% in the victory bar, maybe a mark at 75%?
         if (currCompletedTiles >= completeGameTileCount)
         {
-            Debug.Log("BEAT GAME");
+            SceneManager.LoadScene("Victory");
         }
     }
 }

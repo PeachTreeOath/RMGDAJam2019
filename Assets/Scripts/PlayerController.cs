@@ -33,6 +33,7 @@ public class PlayerController : Singleton<PlayerController>
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
+    private float startTime;
 
     public FacingEnum GetFacing()
     {
@@ -64,13 +65,12 @@ public class PlayerController : Singleton<PlayerController>
     {
         ToggleCam(); // Set cam to follow
         GainPigment(GameObject.Find("ClearPigment").GetComponent<Pigment>());
-
+        startTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-
         // For prototyping only
         if (Input.GetKeyDown(KeyCode.T))
             ToggleCam();
@@ -90,6 +90,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (Input.GetButtonDown("Jump") && canJump)
         {
+            AudioManager.instance.PlaySound("Jump");
             canJump = false;
             body.velocity = Vector2.zero;
             body.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -132,6 +133,8 @@ public class PlayerController : Singleton<PlayerController>
         if (tag.Equals("Ground"))
         {
             ResetJump();
+            if (Time.time - startTime > 1)
+                AudioManager.instance.PlaySound("Land");
         }
         else if (tag.Equals("Tile"))
         {
@@ -162,7 +165,7 @@ public class PlayerController : Singleton<PlayerController>
             return;
         }
 
-        // AudioManager.Instance.PlaySound("Damage", 0.5f);
+        AudioManager.instance.PlaySound("Hit");
         StartCoroutine(FlashWhite(.05f, 2f));
         Vector2 hitDir = Vector2.zero;
         if (isFacingLeft)
@@ -238,6 +241,10 @@ public class PlayerController : Singleton<PlayerController>
         {
             Invoke("UsePigment", 0.1f);
         }
+        else
+        {
+            AudioManager.instance.PlaySound("New_Color");
+        }
 
         if (colorsObtained.Count == 2)
         {
@@ -281,6 +288,9 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (colorsObtained.Count != 0)
         {
+            if (Time.time - startTime > 1)
+                AudioManager.instance.PlaySound("Color_Switch");
+
             equippedPigmentIndex = pigmentIndex;
             ToggleManager.instance.TogglePigment(colorsObtained[equippedPigmentIndex]);
 

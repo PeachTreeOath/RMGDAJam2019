@@ -140,6 +140,7 @@ public class EnemyController : MonoBehaviour
         {
             state = EnemyState.CHARGING;
             bangSprite.enabled = true;
+            AudioManager.instance.PlaySound("Enemy_Detect");
         }
 
         if (!detect)
