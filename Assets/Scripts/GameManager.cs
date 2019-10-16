@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     private int completeGameTileCount;
     private int totalTiles;
     private int currCompletedTiles;
-    private float percentToCompletion = .66f;
+    private float percentToCompletion = .6f;
     private int damageCount = 75;
     private Stack<ColorTile> lastTiles = new Stack<ColorTile>();
 

@@ -298,6 +298,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 case PigmentColor.NONE:
                     animator.runtimeAnimatorController = grayAnim;
+                    sprite.color = new Color(1, 1, 1, 0.5f);
                     foreach (EnemyVision vision in allVisions)
                     {
                         vision.PlayerStealthed();
@@ -305,12 +306,15 @@ public class PlayerController : Singleton<PlayerController>
                     break;
                 case PigmentColor.BLUE:
                     animator.runtimeAnimatorController = blueAnim;
+                    sprite.color = Color.white;
                     break;
                 case PigmentColor.RED:
                     animator.runtimeAnimatorController = redAnim;
+                    sprite.color = Color.white;
                     break;
                 case PigmentColor.YELLOW:
                     animator.runtimeAnimatorController = yellowAnim;
+                    sprite.color = Color.white;
                     break;
             }
         }

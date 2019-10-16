@@ -138,9 +138,12 @@ public class EnemyController : MonoBehaviour
     {
         if (detect && PlayerController.instance.GetCurrentPigment() != PigmentColor.NONE)
         {
-            state = EnemyState.CHARGING;
-            bangSprite.enabled = true;
-            AudioManager.instance.PlaySound("Enemy_Detect");
+            if (state != EnemyState.CHARGING)
+            {
+                AudioManager.instance.PlaySound("Enemy_Detect");
+                bangSprite.enabled = true;
+                state = EnemyState.CHARGING;
+            }
         }
 
         if (!detect)

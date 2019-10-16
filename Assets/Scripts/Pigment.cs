@@ -21,7 +21,22 @@ public class Pigment : MonoBehaviour
 
     private void Awake()
     {
-        visualColor = GetComponent<SpriteRenderer>().color;
+        switch (pigmentColor)
+        {
+            case PigmentColor.BLUE:
+                visualColor = new Color(.22f, .40f, .71f);
+                break;
+            case PigmentColor.YELLOW:
+                visualColor = new Color(.88f, .83f, .39f);
+                break;
+            case PigmentColor.RED:
+                visualColor = new Color(.86f, .31f, .30f);
+                break;
+            default:
+                visualColor = GetComponent<SpriteRenderer>().color;
+                break;
+        }
+        //visualColor = GetComponent<SpriteRenderer>().color;
     }
 
     public Pigment PickupColor()
