@@ -8,6 +8,7 @@ TagManager:
   - Pigment
   - EnemyVision
   - Tile
+  - Exit
   layers:
   - Default
   - TransparentFX

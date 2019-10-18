@@ -10,6 +10,10 @@ public class GameManager : Singleton<GameManager>
 
     public Image completeFill;
     public TextMeshProUGUI completeText;
+    public SpriteRenderer door1;
+    public SpriteRenderer door2;
+    public GameObject exitLeft;
+    public GameObject exitRight;
 
     private int completeGameTileCount;
     private int totalTiles;
@@ -17,6 +21,32 @@ public class GameManager : Singleton<GameManager>
     private float percentToCompletion = .6f;
     private int damageCount = 75;
     private Stack<ColorTile> lastTiles = new Stack<ColorTile>();
+    private bool isVictory;
+    private float exitDistance = 7;
+
+    private void Update()
+    {
+        if (isVictory)
+        {
+            float distance = PlayerController.instance.transform.position.x + 1.5f;
+
+            if (distance > exitDistance)
+            {
+                exitLeft.SetActive(true);
+                exitRight.SetActive(false);
+            }
+            else if (distance < -exitDistance)
+            {
+                exitLeft.SetActive(false);
+                exitRight.SetActive(true);
+            }
+            else
+            {
+                exitLeft.SetActive(false);
+                exitRight.SetActive(false);
+            }
+        }
+    }
 
     public void HitTaken()
     {
@@ -38,7 +68,8 @@ public class GameManager : Singleton<GameManager>
         tile.SwitchToColor();
         currCompletedTiles++;
         UpdateScore();
-        CheckVictory();
+        if (!isVictory)
+            CheckVictoryAvailable();
     }
 
     public void DecompleteTile(ColorTile tile)
@@ -63,10 +94,20 @@ public class GameManager : Singleton<GameManager>
         completeText.text = ratioText + "%";
     }
 
-    private void CheckVictory()
+    private void CheckVictoryAvailable()
+    {
+        if (currCompletedTiles >= completeGameTileCount)
+        {
+            isVictory = true;
+            door1.enabled = false;
+            door2.enabled = false;
+        }
+    }
+
+    public void CheckVictory()
     {
         //todo show only 100% in the victory bar, maybe a mark at 75%?
-        if (currCompletedTiles >= completeGameTileCount)
+        if (isVictory)
         {
             SceneManager.LoadScene("Victory");
         }

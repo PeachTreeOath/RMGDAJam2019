@@ -145,6 +145,10 @@ public class PlayerController : Singleton<PlayerController>
         {
             GainPigment(col.GetComponent<Pigment>().PickupColor());
         }
+        else if (tag.Equals("Exit"))
+        {
+            GameManager.instance.CheckVictory();
+        }
     }
 
     public PigmentColor GetCurrentPigment()
