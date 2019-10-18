@@ -71,7 +71,7 @@ public class PlayerController : Singleton<PlayerController>
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.instance.wonGame)
+        if (GameManager.instance.wonGame)
         {
             return;
         }
@@ -95,7 +95,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (Input.GetButtonDown("Jump") && canJump)
         {
-            AudioManager.instance.PlaySound("Jump");
+            AudioManager.instance.PlaySound("Jump", .5f);
             canJump = false;
             body.velocity = Vector2.zero;
             body.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -144,7 +144,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             ResetJump();
             if (Time.time - startTime > 1)
-                AudioManager.instance.PlaySound("Land");
+                AudioManager.instance.PlaySound("Land", .5f);
         }
         else if (tag.Equals("Tile"))
         {
