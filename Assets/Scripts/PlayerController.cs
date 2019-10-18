@@ -71,6 +71,11 @@ public class PlayerController : Singleton<PlayerController>
     // Update is called once per frame
     void Update()
     {
+        if(GameManager.instance.wonGame)
+        {
+            return;
+        }
+
         // For prototyping only
         if (Input.GetKeyDown(KeyCode.T))
             ToggleCam();
@@ -100,6 +105,11 @@ public class PlayerController : Singleton<PlayerController>
 
     void FixedUpdate()
     {
+        if (GameManager.instance.wonGame)
+        {
+            return;
+        }
+
         // Player in hitstun
         if (inHitStun)
         {

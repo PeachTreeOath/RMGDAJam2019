@@ -14,6 +14,8 @@ public class GameManager : Singleton<GameManager>
     public SpriteRenderer door2;
     public GameObject exitLeft;
     public GameObject exitRight;
+    public bool wonGame;
+    public float wonGameTime;
 
     private int completeGameTileCount;
     private int totalTiles;
@@ -23,9 +25,20 @@ public class GameManager : Singleton<GameManager>
     private Stack<ColorTile> lastTiles = new Stack<ColorTile>();
     private bool isVictory;
     private float exitDistance = 7;
+    private float cameraSpeed = 1;
 
     private void Update()
     {
+        if (wonGame)
+        {
+            float timeElapsed = Time.time - wonGameTime;
+
+            if (timeElapsed > 3)
+            {
+                SceneManager.LoadScene("Victory");
+            }
+        }
+
         if (isVictory)
         {
             float distance = PlayerController.instance.transform.position.x + 1.5f;
@@ -109,7 +122,9 @@ public class GameManager : Singleton<GameManager>
         //todo show only 100% in the victory bar, maybe a mark at 75%?
         if (isVictory)
         {
-            SceneManager.LoadScene("Victory");
+            wonGame = true;
+            wonGameTime = Time.time;
+            ScreenFader.instance.StartOutro();
         }
     }
 }
