@@ -29,6 +29,16 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SceneManager.LoadScene("Title");
+        }
+
         if (wonGame)
         {
             float timeElapsed = Time.time - wonGameTime;
